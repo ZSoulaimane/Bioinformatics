@@ -44,7 +44,7 @@ pip install statistics
 
     index of target1 in "target_unique" list is the same index for "data_list" diseases
 
-    #### example : 
+    example : 
 
     target_unique = [target1, target2]
 
