@@ -3,13 +3,15 @@
 ## libraries used
 
 #### Pandas
-    ``` bash
-        pip install pandas
-    ```
+
+```bash
+pip install pandas
+```
 #### statistics
-    ``` bash
-        pip install statistics
-    ```
+
+```bash
+pip install statistics
+```
 
 ## Function Definition
 
