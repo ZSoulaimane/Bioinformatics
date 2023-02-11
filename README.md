@@ -23,7 +23,7 @@ pip install statistics
 
     * number_target_target_disease this function is to calculate the number of targets that share atleast 2 diseases
 
-### Clarification
+## Clarification
     in Function number_target_target_disease the data_list contain lists each define the target-diseases lists
 
             |----- Disease 1
