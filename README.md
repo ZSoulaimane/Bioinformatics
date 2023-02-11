@@ -3,11 +3,11 @@
 ## libraries used
 
 #### Pandas
-    ```
+    ``` bash
         pip install pandas
     ```
 #### statistics
-    ```
+    ``` bash
         pip install statistics
     ```
 
