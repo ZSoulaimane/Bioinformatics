@@ -5,10 +5,10 @@ import statistics as st
 import logging
 
 
-def Building_dataframe(data_type, first_file):
-    """ Import Evidence Json files and building a dataframes of all files"""
+def building_dataframe(data_type, first_file):
+    """ Import evidence JSON files and create single dataframe from all files """
 
-    logging.info('Reading first Json File')
+    logging.info('Reading the First Json File')
     dataframe = pd.read_json('{}/{}'.format(data_type, first_file), lines=True)
     logging.info('Filtering columns')
     if data_type == 'evidence':
@@ -33,7 +33,7 @@ def Building_dataframe(data_type, first_file):
 
 
 def median_top3(df_evidence):
-    """ Calculating the median and Top3 scores """
+    """Calculating the median and top three scores"""
 
     logging.info('Combining DiseaseId and TargetId')
     df_evidence['data'] = df_evidence['diseaseId'] + str('/') + df_evidence['targetId']
@@ -41,7 +41,7 @@ def median_top3(df_evidence):
     logging.info('Filtering columns')
     df_evidence = df_evidence[['data', 'score']]
 
-    logging.info('Grouping by the Column Data')
+    logging.info('Grouping based on Column Data')
     df_evidence = df_evidence.groupby('data') \
         .agg(lambda x: sorted(list(x), reverse=True)) \
         .reset_index()
@@ -60,13 +60,13 @@ def median_top3(df_evidence):
 
 
 def merge_data(evidence, diseases, targets):
-    """ Merging 3 dataframes , diseases dataframe with column diseaseId , target dataframe with targetId """
+    """ Merging three dataframes: a diseases dataframe with the column diseaseId and a target dataframe with the column targetId """
 
     data = evidence.merge(diseases,left_on='diseaseId', right_on='id').merge(targets,left_on='targetId', right_on='id')
     return data
 
 def number_target_target_disease(dataframe):
-    """ Calculate number of targets share at least 2 diseases """
+    """ Determine the number of targets who have at least two diseases in common """
 
     logging.info('Define counter')
     count = 0
@@ -103,14 +103,14 @@ if "__main__" == __name__ :
     logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 
     logging.info('Start building Evidence dataframe')
-    evidence = Building_dataframe('evidence', 'part-00000-4134a310-5042-4942-82ed-565f3d91eddd.c000.json')
+    evidence = building_dataframe('evidence', 'part-00000-4134a310-5042-4942-82ed-565f3d91eddd.c000.json')
 
     logging.info('Start Calculating Top3 and Median')
     evidence = median_top3(evidence)
 
     logging.info('Start building Target and Diseases dataframe')
-    target, diseases = Building_dataframe('targets', 'part-00000-9befc20b-ce53-4029-bd62-39c5b631aa3f-c000.json'),\
-                Building_dataframe('diseases', 'part-00000-773deead-54e9-4934-b648-b26a4bbed763-c000.json')
+    target, diseases = building_dataframe('targets', 'part-00000-9befc20b-ce53-4029-bd62-39c5b631aa3f-c000.json'),\
+                building_dataframe('diseases', 'part-00000-773deead-54e9-4934-b648-b26a4bbed763-c000.json')
     
     
     logging.info('Merging the 3 dataframes')
@@ -128,4 +128,4 @@ if "__main__" == __name__ :
     logging.info('Saving dataframe')
     dataframe_result.to_json(r'result.json', orient='records')
 
-    logging.info('Number of targets that share atleast 2 Diseases is {}'.format(number_target_target_disease(dataframe_result)))
+    logging.info('The number of targets with at least two diseases in common is {}'.format(number_target_target_disease(dataframe_result)))
