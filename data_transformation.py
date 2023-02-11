@@ -65,6 +65,39 @@ def merge_data(evidence, diseases, targets):
     data = evidence.merge(diseases,left_on='diseaseId', right_on='id').merge(targets,left_on='targetId', right_on='id')
     return data
 
+def number_target_target_disease(dataframe):
+    """ Calculate number of targets share at least 2 diseases """
+
+    logging.info('Define counter')
+    count = 0
+
+    logging.info('Filtering Columns')
+    dataframe2 = dataframe[['targetId', 'diseaseId']]
+
+    logging.info('Get unique elements of TargetId')
+    target_unique = dataframe2.targetId.unique().tolist()
+
+    data_list = []
+
+    # Each list define the disease that a target has
+    logging.info('building a list contain lists')
+    for element in target_unique:
+        df = dataframe2[dataframe2["targetId"] == element] 
+        col_list = df["diseaseId"].values.tolist()
+        data_list.append(col_list)
+    
+    logging.info('Calculate counter')
+    for i in range (len(data_list)-1):
+        liste1 = data_list[i]
+        liste2 = data_list[i+1]
+        liste_total = liste1+liste2
+
+        if  len(set(liste_total)) <= len(liste_total) - 2:
+            count = count + 1
+    
+    return count
+
+
 
 if "__main__" == __name__ :
     logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
@@ -85,7 +118,14 @@ if "__main__" == __name__ :
 
     logging.info('Filtering columns and sorting dataframe')
     dataframe_result = dataframe_result[['targetId', 'diseaseId', 'median', 'top3', 'approvedSymbol', 'name']]
+
+    logging.info('Sorting dataframe depending on median')
     dataframe_result.sort_values(by=['median'], inplace=True)
 
+    logging.info('Reset dataframe Index')
+    dataframe_result = dataframe_result.reset_index()
+
     logging.info('Saving dataframe')
-    dataframe_result.to_json(r'result.json')
+    dataframe_result.to_json(r'result.json', orient='records')
+
+    logging.info('Number of targets that share atleast 2 Diseases is {}'.format(number_target_target_disease(dataframe_result)))
