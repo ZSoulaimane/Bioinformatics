@@ -3,7 +3,7 @@ import os
 import logging
 import statistics as st
 import logging
-
+    
 
 def building_dataframe(data_type, first_file):
     """ Import evidence JSON files and create single dataframe from all files """
@@ -57,6 +57,43 @@ def median_top3(df_evidence):
     df_evidence = df_evidence.iloc[:,[4,5,2,3]]
 
     return df_evidence
+
+
+# def building_dataframe_parquet(data_type):
+#     """ Importing Parquet files using FTP """
+
+#     logging.info('Connecting to the URL')
+#     with FTP("ftp.ebi.ac.uk") as ftp:
+#         logging.info('establishing connection')
+#         ftp.login()
+
+#         logging.info('Cheking data_type')
+#         if data_type == 'evidence':
+#             ftp.cwd('pub/databases/opentargets/platform/21.11/output/etl/parquet/evidence/sourceId=eva/')
+#         else:
+#             ftp.cwd('pub/databases/opentargets/platform/21.11/output/etl/parquet/{}/'.format(data_type))
+
+#         logging.info('Start iterating on files')
+#         for file_name in ftp.nlst():
+#             if ".parquet" in file_name:
+#                 r = BytesIO()
+
+#                 logging.info('Reading file with the name {}'.format(file_name))
+#                 ftp.retrbinary('RETR {}'.format(file_name), r.write)
+
+#                 logging.info('reading parquet dataframe')
+#                 if data_type == 'evidence':
+#                     df = pd.read_parquet(r, columns=['targetId', 'diseaseId', 'score'],  engine='auto')
+#                 else:
+#                     df = pd.read_parquet(r, engine='pyarrow')
+                
+#                 logging.info('Linking dataframes')
+#                 if 'part-00000' not in file_name:
+#                     dataframe = dataframe.append(df)
+#                 else:
+#                     dataframe = df
+#         ftp.close()
+#         return (dataframe)
 
 
 def merge_data(evidence, diseases, targets):
