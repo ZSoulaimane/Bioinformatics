@@ -30,7 +30,7 @@ def building_dataframe(data_type):
 
                 logging.info('reading parquet dataframe')
                 if data_type == 'evidence':
-                    df = pd.read_parquet(r, columns=['targetId', 'diseaseId', 'score'])
+                    df = pd.read_parquet(r, columns=['targetId', 'diseaseId', 'score'], engine='pyarrow')
                 else:
                     df = pd.read_parquet(r, engine='pyarrow')
                 
