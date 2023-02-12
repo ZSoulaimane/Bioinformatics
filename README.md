@@ -1,5 +1,10 @@
 # Bioinformatics
 
+## files
+
+        - data_transformation_FTP to generate result using FTP as a source of data
+        - data_transformation to generate result using file downloaded as a source of data
+
 ## libraries used
 
 #### Pandas
