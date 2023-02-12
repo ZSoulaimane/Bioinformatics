@@ -5,6 +5,7 @@ import statistics as st
 import logging
     
 
+# Building dataframe using Json files
 def building_dataframe(data_type, first_file):
     """ Import evidence JSON files and create single dataframe from all files """
 
@@ -32,33 +33,7 @@ def building_dataframe(data_type, first_file):
     return dataframe
 
 
-def median_top3(df_evidence):
-    """Calculating the median and top three scores"""
-
-    logging.info('Combining DiseaseId and TargetId')
-    df_evidence['data'] = df_evidence['diseaseId'] + str('/') + df_evidence['targetId']
-
-    logging.info('Filtering columns')
-    df_evidence = df_evidence[['data', 'score']]
-
-    logging.info('Grouping based on Column Data')
-    df_evidence = df_evidence.groupby('data') \
-        .agg(lambda x: sorted(list(x), reverse=True)) \
-        .reset_index()
-    
-    logging.info('Calculating Median and Top3')
-    df_evidence['median'] = df_evidence.apply(lambda x : st.median(x.score), axis=1)
-    df_evidence['top3'] = df_evidence.apply(lambda x : list(set(x.score))[:3], axis=1)
-
-    logging.info('Splitting the column data')
-    df_evidence[['diseaseId', 'targetId']] = df_evidence['data'].str.split('/', 1, expand=True)
-
-    logging.info('Ordering and Filtering columns')
-    df_evidence = df_evidence.iloc[:,[4,5,2,3]]
-
-    return df_evidence
-
-
+    # Building dataframe using parquet files
 # def building_dataframe_parquet(data_type):
 #     """ Importing Parquet files using FTP """
 
@@ -94,6 +69,33 @@ def median_top3(df_evidence):
 #                     dataframe = df
 #         ftp.close()
 #         return (dataframe)
+
+
+def median_top3(df_evidence):
+    """ Calculating the median and top three scores """
+
+    logging.info('Combining DiseaseId and TargetId')
+    df_evidence['data'] = df_evidence['diseaseId'] + str('/') + df_evidence['targetId']
+
+    logging.info('Filtering columns')
+    df_evidence = df_evidence[['data', 'score']]
+
+    logging.info('Grouping based on Column Data')
+    df_evidence = df_evidence.groupby('data') \
+        .agg(lambda x: sorted(list(x), reverse=True)) \
+        .reset_index()
+    
+    logging.info('Calculating Median and Top3')
+    df_evidence['median'] = df_evidence.apply(lambda x : st.median(x.score), axis=1)
+    df_evidence['top3'] = df_evidence.apply(lambda x : list(set(x.score))[:3], axis=1)
+
+    logging.info('Splitting the column data')
+    df_evidence[['diseaseId', 'targetId']] = df_evidence['data'].str.split('/', 1, expand=True)
+
+    logging.info('Ordering and Filtering columns')
+    df_evidence = df_evidence.iloc[:,[4,5,2,3]]
+
+    return df_evidence
 
 
 def merge_data(evidence, diseases, targets):
