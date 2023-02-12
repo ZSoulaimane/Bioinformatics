@@ -2,8 +2,7 @@
 
 ## files
 
-        - data_transformation_FTP to generate result using FTP as a source of data
-        - data_transformation to generate result using file downloaded as a source of data
+        data_transformation to generate result using file downloaded as a source of data
 
 ## libraries used
 
@@ -18,9 +17,31 @@ pip install pandas
 pip install statistics
 ```
 
+#### pyarrow
+
+```bash
+pip install pyarrow
+```
+
+###  installing all libraries at once
+you can install all dependecies using 
+
+```bash
+pip install -r requirements.txt
+```
+
+###  installing all libraries at once
+you can use the virtualenv directly
+
+```bash
+source eva-env\bin\avtivate
+```
+
 ## Function Definition
 
-    * Building_dataframe is a function that take 2 input to build a general dataframe from all the json files in diseases, evidence and target
+    * Building_dataframe is a function that take 2 input to build a general dataframe from all the json files for diseases, evidence and target
+
+    * building_dataframe_parquet is a function that take 2 input to build a general dataframe from all the parquet files for diseases, evidence and target using FTP , the difference between Building_dataframe and building_dataframe_parquet is building_dataframe_parquet take muc long time to build the dataframe
 
     * median_top3 the main purpose of this function is to calculate median and Top3 scores of each target
 
